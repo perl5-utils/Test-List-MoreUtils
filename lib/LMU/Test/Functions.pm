@@ -361,28 +361,36 @@ sub test_apply
     # Normal cases
     my @list = ( 0 .. 9 );
     my @list1 = apply { $_++ } @list;
-    ok( is_deeply( \@list,  [ 0 .. 9 ] ) );
-    ok( is_deeply( \@list1, [ 1 .. 10 ] ) );
+    is_deeply( \@list,  [ 0 .. 9 ] );
+    is_deeply( \@list1, [ 1 .. 10 ] );
     @list = ( " foo ", " bar ", "     ", "foobar" );
     @list1 = apply { s/^\s+|\s+$//g } @list;
-    ok( is_deeply( \@list,  [ " foo ", " bar ", "     ", "foobar" ] ) );
-    ok( is_deeply( \@list1, [ "foo",   "bar",   "",      "foobar" ] ) );
+    is_deeply( \@list,  [ " foo ", " bar ", "     ", "foobar" ] );
+    is_deeply( \@list1, [ "foo",   "bar",   "",      "foobar" ] );
     my $item = apply { s/^\s+|\s+$//g } @list;
     is( $item, "foobar" );
+
+    # RT 96596
+  SKIP:
+    {
+        List::MoreUtils::_XScompiled or skip "PurePerl will not fail here ...", 1;
+	eval { my @a = sort apply 1,2; };
+        my $err = $@;
+        like( $err, qr/\QList::MoreUtils::XS::apply(code, ...)\E/, "apply must be reasonable invoked" );
+    }
 
     # RT 38630
   SCOPE:
     {
         # wrong results from apply() [XS]
         @list  = ( 1 .. 4 );
-        @list1 = apply
-        {
+        @list1 = apply {
             grow_stack();
             $_ = 5;
         }
         @list;
-        ok( is_deeply( \@list,  [ 1 .. 4 ] ) );
-        ok( is_deeply( \@list1, [ (5) x 4 ] ) );
+        is_deeply( \@list,  [ 1 .. 4 ] );
+        is_deeply( \@list1, [ (5) x 4 ] );
     }
 
     leak_free_ok(
