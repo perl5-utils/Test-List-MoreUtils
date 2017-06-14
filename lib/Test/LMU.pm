@@ -8,10 +8,21 @@ use Carp qw/croak/;
 
 use base qw(Test::Builder::Module Exporter);
 
-our @EXPORT    = qw(is_true is_false is_defined is_undef is_dying grow_stack leak_free_ok);
-our @EXPORT_OK = qw(is_true is_false is_defined is_undef is_dying grow_stack leak_free_ok);
+our @EXPORT    = qw(freeze is_true is_false is_defined is_undef is_dying grow_stack leak_free_ok);
+our @EXPORT_OK = qw(freeze is_true is_false is_defined is_undef is_dying grow_stack leak_free_ok);
 
 my $CLASS = __PACKAGE__;
+
+eval "use Storable qw();";
+$@ or Storable->import(qw(freeze));
+__PACKAGE__->can("freeze") or eval <<'EOFR';
+use inc::latest 'JSON::PP';
+use JSON::PP qw();
+sub freeze {
+    my $json = JSON::PP->new();
+    $json->encode($_[0]);
+}
+EOFR
 
 ######################################################################
 # Support Functions

@@ -1,34 +1,56 @@
-package LMU::Test::Import;
 
 use strict;
-
-BEGIN
-{
-    $| = 1;
-}
+use warnings;
 
 use Test::More;
+use Test::LMU;
 
-sub run_tests
-{
-    use_ok(
-        "List::MoreUtils", qw(any all none notall
-          any_u all_u none_u notall_u
-          true false firstidx lastidx
+my @pure_funcs = qw(any all none notall one
+          any_u all_u none_u notall_u one_u
+          true false
           insert_after insert_after_string
           apply indexes
           after after_incl before before_incl
-          firstval lastval
+          firstidx lastidx onlyidx
+          firstval lastval onlyval
+          firstres lastres onlyres
+          singleton
           each_array each_arrayref
           pairwise natatime
           mesh uniq
           minmax part
-          bsearch
-          sort_by nsort_by
-          first_index last_index first_value last_value zip distinct)
-    );
-    done_testing();
+          bsearch bsearchidx);
+my @v0_33  = qw(sort_by nsort_by);
+my %alias_list = (
+    v0_22 => {
+        first_index => "firstidx",
+        last_index  => "lastidx",
+        first_value => "firstval",
+        last_value  => "lastval",
+        zip         => "mesh",
+    },
+    v0_33 => {
+        distinct => "uniq",
+    },
+    v0_400 => {
+        first_result  => "firstres",
+        only_index    => "onlyidx",
+        only_value    => "onlyval",
+        only_result   => "onlyres",
+        last_result   => "lastres",
+        bsearch_index => "bsearchidx",
+    },
+);
+
+can_ok(__PACKAGE__, $_) for @pure_funcs;
+
+SKIP: {
+    $INC{'List/MoreUtils.pm'} or skip "List::MoreUtils::XS doesn't alias", 1;
+    can_ok(__PACKAGE__, $_) for @v0_33;
+    can_ok(__PACKAGE__, $_) for map { keys %$_ } values %alias_list;
 }
+
+done_testing;
 
 1;
 
