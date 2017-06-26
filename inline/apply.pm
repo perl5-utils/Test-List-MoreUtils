@@ -24,8 +24,8 @@ is( $item, "foobar" );
 # RT 96596
 SKIP:
 {
-    List::MoreUtils::_XScompiled or skip "PurePerl will not fail here ...", 1;
-    eval { my @a = sort apply 1,2; };
+    $INC{'List/MoreUtils/XS.pm'} or skip "PurePerl will not fail here ...", 1;
+    eval { my @a = \&apply(1,2); };
     my $err = $@;
     like( $err, qr/\QList::MoreUtils::XS::apply(code, ...)\E/, "apply must be reasonable invoked" );
 }
