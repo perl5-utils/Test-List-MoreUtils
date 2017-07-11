@@ -76,13 +76,16 @@ my $have_test_leak_trace = eval { require Test::LeakTrace; 1 };
 
 sub leak_free_ok
 {
-    my $name = shift;
-    my $code = shift;
-  SKIP:
+    while(@_)
     {
-        skip 'Test::LeakTrace not installed', 1 unless $have_test_leak_trace;
-        local $Test::Builder::Level = $Test::Builder::Level + 1;
-        &Test::LeakTrace::no_leaks_ok( $code, "No memory leaks in $name" );
+        my $name = shift;
+        my $code = shift;
+      SKIP:
+        {
+            skip 'Test::LeakTrace not installed', 1 unless $have_test_leak_trace;
+            local $Test::Builder::Level = $Test::Builder::Level + 1;
+            &Test::LeakTrace::no_leaks_ok( $code, "No memory leaks in $name" );
+        }
     }
 }
 
