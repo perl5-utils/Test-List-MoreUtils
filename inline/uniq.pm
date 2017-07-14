@@ -85,11 +85,7 @@ leak_free_ok(
     sub {
 	eval {
 	    my $obj = DieOnStringify->new;
-	    my @u = uniq $obj, $obj;
-	};
-	eval {
-	    my $obj = DieOnStringify->new;
-	    my $u = uniq $obj, $obj;
+	    my @u = uniq "foo", $obj, "bar", $obj;
 	};
     }
 );
