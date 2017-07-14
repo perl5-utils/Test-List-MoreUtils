@@ -19,6 +19,12 @@ leak_free_ok(
 	insert_after_string "a", "longer", @list;
     }
 );
+leak_free_ok(
+    'insert_after_string with exception' => sub {
+	eval { my @list = (qw{This is}, DieOnStringify->new, qw{a list});
+	insert_after_string "a", "longer", @list };
+    }
+);
 is_dying( sub { &insert_after_string( 42, 4711, "13" ); } );
 
 done_testing;

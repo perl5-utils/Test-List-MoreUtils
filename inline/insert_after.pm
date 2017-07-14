@@ -20,6 +20,12 @@ leak_free_ok(
 	insert_after { $_ eq 'a' } "longer" => @list;
     }
 );
+leak_free_ok(
+    'insert_after with exception' => sub {
+	eval { my @list = (qw{This is}, DieOnStringify->new, qw{a list});
+	insert_after { $_ eq 'a' } "longer" => @list };
+    }
+);
 is_dying( sub { &insert_after( 42, 4711, [qw(die bart die)] ); } );
 is_dying( sub { &insert_after( 42, 4711, "13" ); } );
 is_dying(
