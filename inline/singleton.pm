@@ -70,7 +70,7 @@ SCOPE:
 }
 
 leak_free_ok(
-    uniq => sub {
+    singleton => sub {
 	my @s = ( 1001 .. 1200, "AA" .. "ZZ" );
 	my @d = map { ( 1 .. 1000, "aa" .. "zz" ) } 0 .. 1;
 	my @a = ( @d, @s );
