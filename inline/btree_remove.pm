@@ -77,5 +77,6 @@ leak_free_ok(
         eval { btree_remove { grow_stack(); $_ <=> $v or die "Goal!"; $_ <=> $v } @list };
     },
 );
+is_dying( 'btree_remove without sub' => sub { &btree_remove( 42, @even ); } );
 
 done_testing;

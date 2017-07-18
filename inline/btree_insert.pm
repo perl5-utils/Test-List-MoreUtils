@@ -41,4 +41,6 @@ leak_free_ok(
     }
 );
 
+is_dying( 'btree_insert without sub' => sub { &btree_insert( 42, @even ); } );
+
 done_testing;
