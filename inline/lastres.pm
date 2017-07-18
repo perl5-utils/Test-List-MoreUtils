@@ -24,6 +24,6 @@ leak_free_ok(
 	$x = lastres { $_ > 5 } 4 .. 9;
     }
 );
-is_dying( sub { &lastres( 42, 4711 ); } );
+is_dying( 'lastres without sub' => sub { &lastres( 42, 4711 ); } );
 
 done_testing;

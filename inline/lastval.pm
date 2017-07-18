@@ -25,6 +25,6 @@ leak_free_ok(
 	$x = lastval { $_ > 5 } 4 .. 9;
     }
 );
-is_dying( sub { &lastval( 42, 4711 ); } );
+is_dying( 'lastval without sub' => sub { &lastval( 42, 4711 ); } );
 
 done_testing;

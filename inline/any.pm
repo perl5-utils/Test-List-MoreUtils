@@ -25,6 +25,6 @@ leak_free_ok(
 	};
     }
 );
-is_dying( sub { &any( 42, 4711 ); } );
+is_dying( 'any without sub' => sub { &any( 42, 4711 ); } );
 
 done_testing;

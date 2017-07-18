@@ -121,7 +121,7 @@ leak_free_ok(
 	}
     }
 );
-is_dying( sub { &each_array( 42, 4711 ); } );
-is_dying( sub { &each_arrayref( 42, 4711 ); } );
+is_dying( 'each_array without sub' => sub { &each_array( 42, 4711 ); } );
+is_dying( 'each_arrayref without sub' => sub { &each_arrayref( 42, 4711 ); } );
 
 done_testing;

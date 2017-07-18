@@ -42,6 +42,6 @@ if ($have_scalar_util)
     Scalar::Util::weaken($ref);
     is( $ref, undef, "weakened away" );
 }
-is_dying( sub { &indexes( 42, 4711 ); } );
+is_dying( 'indexes without sub' => sub { &indexes( 42, 4711 ); } );
 
 done_testing;

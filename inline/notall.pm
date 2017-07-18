@@ -15,6 +15,6 @@ leak_free_ok(
 	my $ok2 = notall { $_ == 5000 } 1 .. 10000;
     }
 );
-is_dying( sub { &notall( 42, 4711 ); } );
+is_dying( 'notall without sub' => sub { &notall( 42, 4711 ); } );
 
 done_testing;

@@ -14,7 +14,7 @@ leak_free_ok(
 	@x = after { /z/ } @dummy = qw{ bar baz foo };
     }
 );
-is_dying( sub { &after( 42, 4711 ); } );
+is_dying( 'after without sub' => sub { &after( 42, 4711 ); } );
 
 @x = ( 1, after { /foo/ } qw(abc def) );
 is_deeply(\@x, [ 1 ], "check XS implementation doesn't mess up stack");

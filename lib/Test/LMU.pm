@@ -57,10 +57,16 @@ sub is_undef
 
 sub is_dying
 {
-    @_ == 1 or croak "Expected 1 param";
+    @_ == 1 or @_ == 2 or croak "is_dying(name => code)";
+    my ($name, $code );
+    $name = shift if @_ == 2;
+    $code = shift;
+    ref $code eq "CODE" or croak "is_dying(name => code)";
     my $tb = $CLASS->builder();
-    eval { $_[0]->(); };
-    $tb->ok( $@, "is_dying()" );
+    eval { $code->(); };
+    my $except = $@;
+    chomp $except;
+    $tb->ok( $except, "$name is_dying() with '$except'" );
 }
 
 my @bigary = (1) x 500;

@@ -15,6 +15,6 @@ leak_free_ok(
 	my $ok2 = all_u { $_ == 5000 } 1 .. 10000;
     }
 );
-is_dying( sub { &all_u( 42, 4711 ); } );
+is_dying( 'all_u without sub' => sub { &all_u( 42, 4711 ); } );
 
 done_testing;

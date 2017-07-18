@@ -65,6 +65,6 @@ leak_free_ok(
 	my @z = mesh @x, @y;
     }
 );
-is_dying( sub { &mesh( 1, 2 ); } );
+is_dying( 'mesh with a list, not at least two arrays' => sub { &mesh( 1, 2 ); } );
 
 done_testing;

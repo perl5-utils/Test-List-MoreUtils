@@ -25,6 +25,6 @@ leak_free_ok(
 	};
     }
 );
-is_dying( sub { &any_u( 42, 4711 ); } );
+is_dying( 'any_u without sub' => sub { &any_u( 42, 4711 ); } );
 
 done_testing;

@@ -26,6 +26,6 @@ leak_free_ok(
 	my $i2 = lastidx { $_ >= 5000 } 1 .. 10000;
     }
 );
-is_dying( sub { &lastidx( 42, 4711 ); } );
+is_dying( 'lastidx without sub' => sub { &lastidx( 42, 4711 ); } );
 
 done_testing;

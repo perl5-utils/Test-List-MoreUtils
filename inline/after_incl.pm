@@ -14,6 +14,6 @@ leak_free_ok(
 	@x = after_incl { /z/ } @dummy = qw{ bar baz foo };
     }
 );
-is_dying( sub { &after_incl( 42, 4711 ); } );
+is_dying( 'after_incl without sub' => sub { &after_incl( 42, 4711 ); } );
 
 done_testing;

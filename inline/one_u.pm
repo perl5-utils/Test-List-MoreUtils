@@ -18,6 +18,6 @@ leak_free_ok(
 	my $ok2 = one_u { 150 <= $_ } 1 .. 300;
     }
 );
-is_dying( sub { &one_u( 42, 4711 ); } );
+is_dying( 'one_u without sub' => sub { &one_u( 42, 4711 ); } );
 
 done_testing;

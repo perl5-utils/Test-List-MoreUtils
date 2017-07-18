@@ -55,6 +55,6 @@ leak_free_ok(
 	@list;
     }
 );
-is_dying( sub { &apply( 42, 4711 ); } );
+is_dying( 'apply without sub' => sub { &apply( 42, 4711 ); } );
 
 done_testing;

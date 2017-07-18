@@ -28,6 +28,6 @@ leak_free_ok(
 	my $i2 = firstidx { $_ >= 5000 } 1 .. 10000;
     }
 );
-is_dying( sub { &firstidx( 42, 4711 ); } );
+is_dying( 'firstidx without sub' => sub { &firstidx( 42, 4711 ); } );
 
 done_testing;

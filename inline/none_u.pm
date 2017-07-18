@@ -15,6 +15,6 @@ leak_free_ok(
 	my $ok2 = none_u { $_ == 5000 } 1 .. 10000;
     }
 );
-is_dying( sub { &none_u( 42, 4711 ); } );
+is_dying( 'none_u without sub' => sub { &none_u( 42, 4711 ); } );
 
 done_testing;

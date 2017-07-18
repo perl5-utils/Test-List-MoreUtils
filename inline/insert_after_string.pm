@@ -25,6 +25,6 @@ leak_free_ok(
 	insert_after_string "a", "longer", @list };
     }
 );
-is_dying( sub { &insert_after_string( 42, 4711, "13" ); } );
+is_dying( 'insert_after_string without array' => sub { &insert_after_string( 42, 4711, "13" ); } );
 
 done_testing;

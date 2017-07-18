@@ -14,6 +14,6 @@ leak_free_ok(
 	@x = before { /f/ } @dummy = qw{ bar baz foo };
     }
 );
-is_dying( sub { &before( 42, 4711 ); } );
+is_dying( 'before without sub' => sub { &before( 42, 4711 ); } );
 
 done_testing;

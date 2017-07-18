@@ -36,6 +36,6 @@ leak_free_ok(
 	};
     }
 );
-is_dying( sub { &bsearchidx( 42, ( 1 .. 100 ) ); } );
+is_dying( 'bsearchidx without sub' => sub { &bsearchidx( 42, ( 1 .. 100 ) ); } );
 
 done_testing;

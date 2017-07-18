@@ -26,12 +26,8 @@ leak_free_ok(
 	insert_after { $_ eq 'a' } "longer" => @list };
     }
 );
-is_dying( sub { &insert_after( 42, 4711, [qw(die bart die)] ); } );
-is_dying( sub { &insert_after( 42, 4711, "13" ); } );
-is_dying(
-    sub {
-	&insert_after( sub { }, 4711, "13" );
-    }
-);
+is_dying( 'insert_after without sub' => sub { &insert_after( 42, 4711, [qw(die bart die)] ); } );
+is_dying( 'insert_after without sub and array' => sub { &insert_after( 42, 4711, "13" ); } );
+is_dying( 'insert_after without array' => sub { &insert_after( sub { }, 4711, "13" ); });
 
 done_testing;

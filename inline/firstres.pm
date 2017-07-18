@@ -24,6 +24,6 @@ leak_free_ok(
 	$x = firstres { $_ > 5 } 4 .. 9;
     }
 );
-is_dying( sub { &firstres( 42, 4711 ); } );
+is_dying( 'firstres without sub' => sub { &firstres( 42, 4711 ); } );
 
 done_testing;

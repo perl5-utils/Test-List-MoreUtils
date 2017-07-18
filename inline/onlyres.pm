@@ -28,6 +28,6 @@ leak_free_ok(
 	my $ok2 = onlyres { 150 <= $_ } 1 .. 300;
     }
 );
-is_dying( sub { &onlyres( 42, 4711 ); } );
+is_dying( 'onlyres without sub' => sub { &onlyres( 42, 4711 ); } );
 
 done_testing;

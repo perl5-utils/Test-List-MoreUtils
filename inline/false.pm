@@ -20,6 +20,6 @@ leak_free_ok(
 	my $n2 = false { $_ == 5000 } 1 .. 10000;
     }
 );
-is_dying( sub { &false( 42, 4711 ); } );
+is_dying( 'false without sub' => sub { &false( 42, 4711 ); } );
 
 done_testing;

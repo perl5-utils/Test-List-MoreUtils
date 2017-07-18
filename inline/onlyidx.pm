@@ -30,6 +30,6 @@ leak_free_ok(
 	my $ok2 = onlyidx { 150 <= $_ } 1 .. 300;
     }
 );
-is_dying( sub { &onlyidx( 42, 4711 ); } );
+is_dying( 'onlyidx without sub' => sub { &onlyidx( 42, 4711 ); } );
 
 done_testing;

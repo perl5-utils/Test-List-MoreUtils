@@ -30,6 +30,6 @@ leak_free_ok(
 	my $ok2 = onlyval { 150 <= $_ } 1 .. 300;
     }
 );
-is_dying( sub { &onlyval( 42, 4711 ); } );
+is_dying( 'onlyval without sub' => sub { &onlyval( 42, 4711 ); } );
 
 done_testing;

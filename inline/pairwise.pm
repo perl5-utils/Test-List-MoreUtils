@@ -93,20 +93,12 @@ SKIP:
     like( join( "", @warns[ 0, 1 ] ), qr/Use of uninitialized value.*? in addition/, "warning on broken caller" );
 }
 
-is_dying( sub { &pairwise( 42, \@a, \@b ); } );
+is_dying( 'pairwise without sub' => sub { &pairwise( 42, \@a, \@b ); } );
 SKIP:
 {
     $INC{'List/MoreUtils/XS.pm'} or skip "PurePerl will not core here ...", 2;
-    is_dying(
-	sub {
-	    @c = &pairwise( sub { }, 1, \@b );
-	}
-    );
-    is_dying(
-	sub {
-	    @c = &pairwise( sub { }, \@a, 2 );
-	}
-    );
+    is_dying( 'pairwise without first ARRAY' => sub { @c = &pairwise( sub { }, 1, \@b ); });
+    is_dying( 'pairwise without second ARRAY' => sub { @c = &pairwise( sub { }, \@a, 2 ); });
 }
 
 done_testing;

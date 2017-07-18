@@ -41,6 +41,6 @@ leak_free_ok(
 	};
     }
 );
-is_dying( sub { &bsearch( 42, ( 1 .. 100 ) ); } );
+is_dying( 'bsearch without sub' => sub { &bsearch( 42, ( 1 .. 100 ) ); } );
 
 done_testing;
