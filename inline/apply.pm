@@ -12,12 +12,12 @@ is_deeply( \@null_list, [], 'apply(null) returns null list' );
 # Normal cases
 my @list = ( 0 .. 9 );
 my @list1 = apply { $_++ } @list;
-is_deeply( \@list,  [ 0 .. 9 ] );
-is_deeply( \@list1, [ 1 .. 10 ] );
+is_deeply( \@list,  [ 0 .. 9 ], "original numbers untouched" );
+is_deeply( \@list1, [ 1 .. 10 ], "returned numbers increased" );
 @list = ( " foo ", " bar ", "     ", "foobar" );
 @list1 = apply { s/^\s+|\s+$//g } @list;
-is_deeply( \@list,  [ " foo ", " bar ", "     ", "foobar" ] );
-is_deeply( \@list1, [ "foo",   "bar",   "",      "foobar" ] );
+is_deeply( \@list,  [ " foo ", " bar ", "     ", "foobar" ], "original strings untouched" );
+is_deeply( \@list1, [ "foo",   "bar",   "",      "foobar" ], "returned strings stripped" );
 my $item = apply { s/^\s+|\s+$//g } @list;
 is( $item, "foobar" );
 
@@ -35,26 +35,35 @@ SCOPE:
 {
     # wrong results from apply() [XS]
     @list  = ( 1 .. 4 );
-    @list1 = apply {
-	grow_stack();
-	$_ = 5;
-    }
-    @list;
+    @list1 = apply { grow_stack(); $_ = 5; } @list;
     is_deeply( \@list,  [ 1 .. 4 ] );
     is_deeply( \@list1, [ (5) x 4 ] );
 }
 
 leak_free_ok(
     apply => sub {
-	@list  = ( 1 .. 4 );
-	@list1 = apply
-	{
-	    grow_stack();
-	    $_ = 5;
-	}
-	@list;
+        @list  = ( 1 .. 4 );
+        @list1 = apply
+        {
+            grow_stack();
+            $_ = 5;
+        }
+        @list;
     }
 );
+
+SCOPE: {
+    local $TODO = "Unresolved, currently either LMU::XS or Perl breaks";
+    leak_free_ok(
+        'dying callback during apply' => sub {
+            my @l  = ( 1 .. 4 );
+            eval {
+                my @l1 = apply { $_ % 2 or die "Even!"; $_ %= 2; } @l
+            };
+        }
+    );
+}
+
 is_dying( 'apply without sub' => sub { &apply( 42, 4711 ); } );
 
 done_testing;
