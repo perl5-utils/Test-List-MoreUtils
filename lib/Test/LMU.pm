@@ -8,8 +8,8 @@ use Carp qw/croak/;
 
 use base qw(Test::Builder::Module Exporter);
 
-our @EXPORT    = qw(freeze is_true is_false is_defined is_undef is_dying grow_stack leak_free_ok);
-our @EXPORT_OK = qw(freeze is_true is_false is_defined is_undef is_dying grow_stack leak_free_ok);
+our @EXPORT    = qw(freeze is_true is_false is_defined is_undef is_dying not_dying grow_stack leak_free_ok);
+our @EXPORT_OK = qw(freeze is_true is_false is_defined is_undef is_dying not_dying grow_stack leak_free_ok);
 
 my $CLASS = __PACKAGE__;
 
@@ -66,7 +66,21 @@ sub is_dying
     eval { $code->(); };
     my $except = $@;
     chomp $except;
-    $tb->ok( $except, "$name is_dying() with '$except'" );
+    $tb->ok( $except, "$name is_dying()" ) and note($except);
+}
+
+sub not_dying
+{
+    @_ == 1 or @_ == 2 or croak "not_dying(name => code)";
+    my ($name, $code );
+    $name = shift if @_ == 2;
+    $code = shift;
+    ref $code eq "CODE" or croak "not_dying(name => code)";
+    my $tb = $CLASS->builder();
+    eval { $code->(); };
+    my $except = $@;
+    chomp $except;
+    $tb->ok( !$except, "$name not_dying()" ) or diag($except);
 }
 
 my @bigary = (1) x 500;
