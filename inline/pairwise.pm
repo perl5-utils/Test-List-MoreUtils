@@ -67,8 +67,14 @@ leak_free_ok(
 	@c = pairwise { $a + $b } @a, @b;
     }
 );
-@a = qw/a b c/;
-@b = qw/1 2 3/;
+
+leak_free_ok(
+    'exceptional block' => sub {
+	@a = qw/a b c/;
+	@b = qw/1 2 3/;
+	eval { @c = pairwise { $b == 3 and die "Primes suck!"; "$a:$b" } @a, @b };
+    }
+);
 
 SKIP:
 {
