@@ -8,35 +8,35 @@ my @expected;
 
 @expected = @even;
 @in = mesh @odd, @even;
-foreach my $v (@odd) { is( $v, btree_remove { $_ <=> $v } @in) }
+foreach my $v (@odd) { is( $v, (btree_remove { $_ <=> $v } @in), "$v in order removed" ) }
 is_deeply(\@in, \@expected, "btree_remove all odd elements succeeded");
 
 @in = mesh @odd, @even;
-foreach my $v (reverse @odd) { is( $v, btree_remove { $_ <=> $v } @in) }
-is_deeply(\@in, \@expected, "btree_remove all odd elements succeeded");
+foreach my $v (reverse @odd) { is( $v, (btree_remove { $_ <=> $v } @in), "$v reverse ordered removed" ) }
+is_deeply(\@in, \@expected, "btree_remove all odd elements reversely succeeded");
 
 @expected = @odd;
 @in = mesh @odd, @even;
-foreach my $v (@even) { is( $v, btree_remove { $_ <=> $v } @in); }
+foreach my $v (@even) { is( $v, (btree_remove { $_ <=> $v } @in), "$v in order removed" ); }
 is_deeply(\@in, \@expected, "btree_remove all even elements succeeded");
 
 @in = mesh @odd, @even;
-foreach my $v (reverse @even) { is( $v, btree_remove { $_ <=> $v } @in); }
-is_deeply(\@in, \@expected, "btree_remove all even elements succeeded");
+foreach my $v (reverse @even) { is( $v, (btree_remove { $_ <=> $v } @in), "$v reverse ordered removed" ); }
+is_deeply(\@in, \@expected, "btree_remove all even elements reversely succeeded");
 
 leak_free_ok(
     'btree_remove first' => sub {
-        my @list = mesh @odd, @even;
+        my @list = (1 .. 100);
 	my $v = $list[0];
         btree_remove { $_ <=> $v } @list
     },
     'btree_remove last' => sub {
-        my @list = mesh @odd, @even;
+        my @list = (1 .. 100);
 	my $v = $list[-1];
         btree_remove { $_ <=> $v } @list
     },
     'btree_remove middle' => sub {
-        my @list = mesh @odd, @even;
+        my @list = (1 .. 100);
 	my $v = $list[int($#list/2)];
         btree_remove { $_ <=> $v } @list
     },
