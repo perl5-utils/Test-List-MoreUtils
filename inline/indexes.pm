@@ -51,6 +51,8 @@ $lr and is_deeply( \@n, [],         "indexes/leak: none" );
 $lr and is_deeply( \@o, [ 1, 3, 5 ], "indexes/leak: odd" );
 $lr and is_deeply( \@e, [ 0, 2, 4 ], "indexes/leak: even" );
 
+my $have_scalar_util = eval { require Scalar::Util; 1 };
+
 if ($have_scalar_util)
 {
     my $ref = \( indexes( sub { 1 }, 123 ) );
