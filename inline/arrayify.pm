@@ -73,7 +73,6 @@ SKIP: {
             eval { my @out = arrayify @in; }; diag($@) if($@);
         },
     );
-    local $TODO = "Broken in perl-5.26, tracked down to commit 8b0c3377" if($^V eq v5.26.0);
     leak_free_ok(
         'arrayify with exception in overloading stringify at end' => sub {
             my @in = (qw(av_make av_undef av_clear), [qw(av_push av_pop)], qw(av_fetch av_store), [['av_shift'], ['av_unshift']], DieOnStringify->new);

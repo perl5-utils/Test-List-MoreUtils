@@ -53,7 +53,6 @@ leak_free_ok(
 );
 
 SCOPE: {
-    local $TODO = "Unresolved, currently either LMU::XS or Perl breaks";
     leak_free_ok(
         'dying callback during apply' => sub {
             my @l  = ( 1 .. 4 );
