@@ -30,8 +30,8 @@ SCOPE:
         twentyone => [2],
     );
 
-    my $cmped = listcmp @a, @b, @c;
-    is_deeply($cmped, \%expected, "Sequence vs. Prime vs. Fibonacci sorted out correctly");
+    my %cmped = listcmp @a, @b, @c;
+    is_deeply(\%cmped, \%expected, "Sequence vs. Prime vs. Fibonacci sorted out correctly");
 }
 
 SCOPE:
@@ -55,8 +55,8 @@ SCOPE:
         thirteen => [0, 1],
     );
 
-    my $cmped = listcmp @a, @b;
-    is_deeply($cmped, \%expected, "Sequence vs. Prime filled with undef sorted out correctly");
+    my %cmped = listcmp @a, @b;
+    is_deeply(\%cmped, \%expected, "Sequence vs. Prime filled with undef sorted out correctly");
 }
 
 leak_free_ok(
@@ -80,7 +80,7 @@ leak_free_ok(
             thirteen => [0, 1],
         );
 
-        my $cmped = listcmp @a, @b;
+        my %cmped = listcmp @a, @b;
     }
 );
 
@@ -97,7 +97,7 @@ leak_free_ok(
                 three => [0, 1],
             );
 
-            my $cmped = listcmp @a, @b;
+            my %cmped = listcmp @a, @b;
         };
     },
     'listcmp with exception in overloading stringify at end' => sub {
@@ -111,7 +111,7 @@ leak_free_ok(
                 three => [0, 1],
             );
 
-            my $cmped = listcmp @a, @b;
+            my %cmped = listcmp @a, @b;
         };
     }
 );
