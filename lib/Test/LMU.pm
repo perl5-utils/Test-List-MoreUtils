@@ -110,7 +110,6 @@ sub leak_free_ok
 }
 
 {
-
     package DieOnStringify;
     use overload '""' => \&stringify;
     sub new { bless {}, shift }
