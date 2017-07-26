@@ -8,10 +8,13 @@ SCOPE:
     my @s = ( 1001 .. 1200 );
     my @d = ( 1 .. 1000 );
     my @a = ( @d, @s, @d );
+    my $fa = freeze( \@a );
     my @u = duplicates @a;
-    is_deeply( \@u, [@d] );
+    is( $fa, freeze( \@a ), "duplicates:G_ARRAY leaves numbers untouched" );
+    is_deeply( \@u, [@d], "duplicates of numbers" );
     my $u = duplicates @a;
-    is( scalar @d, $u );
+    is( $fa, freeze( \@a ), "duplicates:G_SCALAR leaves numbers untouched" );
+    is( scalar @d, $u, "scalar result of duplicates of numbers" );
 }
 
 # Test strings
@@ -20,10 +23,13 @@ SCOPE:
     my @s = ( "AA" .. "ZZ" );
     my @d = ( "aa" .. "zz" );
     my @a = ( @d, @s, @d );
+    my $fa = freeze( \@a );
     my @u = duplicates @a;
-    is_deeply( \@u, [@d] );
+    is( $fa, freeze( \@a ), "duplicates:G_ARRAY leaves numbers untouched" );
+    is_deeply( \@u, [@d], "duplicates of numbers" );
     my $u = duplicates @a;
-    is( scalar @d, $u );
+    is( $fa, freeze( \@a ), "duplicates:G_SCALAR leaves numbers untouched" );
+    is( scalar @d, $u, "scalar result of duplicates of numbers" );
 }
 
 # Test mixing strings and numbers
@@ -36,12 +42,13 @@ SCOPE:
     my $fa = freeze( \@a );
     my @u  = duplicates map { $_ } @a;
     my $fu = freeze( \@u );
-    is_deeply( \@u, [@d] );
-    is( $fd, freeze( \@d ) );
-    is( $fa, freeze( \@a ) );
+    is_deeply( \@u, [@d], "duplicates of numbers/strings mixture" );
+    is( $fd, freeze( \@d ), "frozen duplicates of numbers/strings mixture" );
+    is( $fa, freeze( \@a ), "duplicates:G_ARRAY leaves mixture untouched" );
     is( $fu, $fd );
     my $u = duplicates @a;
-    is( scalar @d, $u );
+    is( $fa, freeze( \@a ), "duplicates:G_SCALAR leaves mixture untouched" );
+    is( scalar @d, $u, "scalar result of duplicates of numbers/strings mixture" );
 }
 
 SCOPE:
@@ -51,11 +58,15 @@ SCOPE:
     my @s = ( 1001 .. 1200, "AA" .. "ZZ" );
     my @d = ( 1 .. 1000, "aa" .. "zz" );
     @a = ( @d, @s, @d );
-    my @u = duplicates map { $_ } @a;
-    is_deeply( \@u, [@d] );
+    my $fa = freeze( \@a );
+    my @u = duplicates @a;
+    is_deeply( \@u, [@d], "duplicates of tied array of numbers/strings mixture" );
+    is( $fa, freeze( \@a ), "duplicates:G_ARRAY leaves mixture untouched" );
     @a = ( @u, @d );
+    $fa = freeze( \@a );
     my $u = duplicates @a;
-    is( scalar @d, $u );
+    is( $fa, freeze( \@a ), "duplicates:G_SCALAR leaves mixture untouched" );
+    is( scalar @d, $u, "scalar result of duplicates of tied array of numbers/strings mixture" );
 }
 
 SCOPE:
@@ -70,7 +81,7 @@ SCOPE:
 }
 
 leak_free_ok(
-    uniq => sub {
+    duplicates => sub {
 	my @s = ( 1001 .. 1200, "AA" .. "ZZ" );
 	my @d = map { ( 1 .. 1000, "aa" .. "zz" ) } 0 .. 1;
 	my @a = ( @d, @s );
@@ -85,11 +96,12 @@ leak_free_ok(
     sub {
 	eval {
 	    my $obj = DieOnStringify->new;
-	    my @u = duplicates $obj, $obj;
+	    my @foo = ( 'a', 'b', '', undef, $obj, 'b', 'c', '', undef, $obj );
+	    my @u = duplicates @foo;
 	};
 	eval {
 	    my $obj = DieOnStringify->new;
-	    my $u = duplicates $obj, $obj;
+	    my $u = duplicates 'a', 'b', '', undef, $obj, 'b', 'c', '', undef, $obj;
 	};
     }
 );
