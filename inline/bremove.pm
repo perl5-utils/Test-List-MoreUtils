@@ -4,7 +4,7 @@ use Test::LMU;
 
 my @even = map { $_ * 2 } 1 .. 100;
 my @odd  = map { $_ * 2 - 1 } 1 .. 100;
-my @expected;
+my (@expected, @in);
 
 @expected = @even;
 @in = mesh @odd, @even;
