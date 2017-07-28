@@ -5,7 +5,6 @@ use Tie::Array ();
 
 SCOPE:
 {
-    # 124 words - maybe verify word count with a test, too
     my $lorem =
       "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.";
     my @lorem = grep { $_ } split /(?:\b|\s)/, $lorem;
@@ -22,6 +21,10 @@ SCOPE:
     is_deeply([','],  $o[$n_comma], "$n_comma comma");
     is_deeply(['.'],  $o[$n_dot],   "$n_dot dots");
     is_deeply(['et'], $o[$n_et],    "$n_et words 'et'");
+
+    @o = occurances grep { /\w+/ } @lorem;
+    my $wc = reduce_0 { defined $b ? $a + $_ * scalar @$b : $a } @o;
+    is( $wc, 124, "Words are as many as requested at www.loremipsum.de" );
 }
 
 SCOPE:
