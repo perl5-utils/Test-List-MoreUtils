@@ -1,26 +1,23 @@
 
-use strict;
-use warnings;
-
 use Test::More;
 use Test::LMU;
 
 my @pure_funcs = qw(any all none notall one
-          any_u all_u none_u notall_u one_u
-          true false
-          insert_after insert_after_string
-          apply indexes
-          after after_incl before before_incl
-          firstidx lastidx onlyidx
-          firstval lastval onlyval
-          firstres lastres onlyres
-          singleton
-          each_array each_arrayref
-          pairwise natatime
-          mesh uniq
-          minmax part
-          bsearch bsearchidx);
-my @v0_33  = qw(sort_by nsort_by);
+  any_u all_u none_u notall_u one_u
+  true false
+  insert_after insert_after_string
+  apply indexes
+  after after_incl before before_incl
+  firstidx lastidx onlyidx
+  firstval lastval onlyval
+  firstres lastres onlyres
+  singleton
+  each_array each_arrayref
+  pairwise natatime
+  mesh uniq
+  minmax part
+  bsearch bsearchidx);
+my @v0_33      = qw(sort_by nsort_by);
 my %alias_list = (
     v0_22 => {
         first_index => "firstidx",
@@ -44,7 +41,8 @@ my %alias_list = (
 
 can_ok(__PACKAGE__, $_) for @pure_funcs;
 
-SKIP: {
+SKIP:
+{
     $INC{'List/MoreUtils.pm'} or skip "List::MoreUtils::XS doesn't alias", 1;
     can_ok(__PACKAGE__, $_) for @v0_33;
     can_ok(__PACKAGE__, $_) for map { keys %$_ } values %alias_list;

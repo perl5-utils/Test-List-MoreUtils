@@ -1,7 +1,4 @@
 
-use strict;
-use warnings;
-
 use Test::More;
 use Test::LMU;
 use Tie::Array ();
@@ -102,7 +99,7 @@ leak_free_ok(
     },
     'listcmp with exception in overloading stringify at end' => sub {
         eval {
-            my @a = ("one", "two", "three");
+            my @a = ("one", "two",   "three");
             my @b = ("two", "three", DieOnStringify->new);
 
             my %expected = (

@@ -38,7 +38,11 @@ SCOPE:
 {
     my @probes = ((1) x 3, undef, (2) x 4, undef, (3) x 2, undef, (4) x 7, undef, (5) x 2, undef, (6) x 4);
     my $fp     = freeze(\@probes);
-    my @o      = map { ref $_ ? [sort { (defined $a <=> defined $b) or $a <=> $b } @$_] : $_ } occurances @probes;
+    my @o      = map {
+        ref $_
+          ? [sort { (defined $a <=> defined $b) or $a <=> $b } @$_]
+          : $_
+    } occurances @probes;
     is($fp, freeze(\@probes), "probes untouched");
     my @expectation = (undef, undef, [3, 5], [1], [2, 6], [undef], undef, [4]);
     is_deeply(\@expectation, \@o, "occurances of integer probes");
@@ -47,11 +51,11 @@ SCOPE:
 leak_free_ok(
     occurances => sub {
         my @probes = ((1) x 3, (2) x 4, (3) x 2, (4) x 7, (5) x 2, (6) x 4);
-        my @o      = occurances @probes;
+        my @o = occurances @probes;
     },
     'scalar occurances' => sub {
         my @probes = ((1) x 3, (2) x 4, (3) x 2, (4) x 7, (5) x 2, (6) x 4);
-        my $o      = occurances @probes;
+        my $o = occurances @probes;
     }
 );
 
@@ -59,12 +63,12 @@ leak_free_ok(
     'occurances with exception in overloading stringify',
     sub {
         eval {
-            my $obj = DieOnStringify->new;
+            my $obj    = DieOnStringify->new;
             my @probes = ((1) x 3, $obj, (2) x 4, $obj, (3) x 2, $obj, (4) x 7, $obj, (5) x 2, $obj, (6) x 4);
             my @o      = occurances @probes;
         };
         eval {
-            my $obj = DieOnStringify->new;
+            my $obj    = DieOnStringify->new;
             my @probes = ((1) x 3, $obj, (2) x 4, $obj, (3) x 2, $obj, (4) x 7, $obj, (5) x 2, $obj, (6) x 4);
             my $o      = occurances @probes;
         };

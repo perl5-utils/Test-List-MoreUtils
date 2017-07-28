@@ -1,10 +1,8 @@
 
-use strict;
-
 use Test::More;
 $INC{'List/MoreUtils.pm'} or plan skip_all => "Unreasonable unless loaded via List::MoreUtils";
 
-is( List::MoreUtils::_XScompiled(), 0+defined( $INC{'List/MoreUtils/XS.pm'}), "_XScompiled" );
+is(List::MoreUtils::_XScompiled(), 0 + defined($INC{'List/MoreUtils/XS.pm'}), "_XScompiled");
 
 done_testing();
 
