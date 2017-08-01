@@ -19,7 +19,7 @@ is(scalar @list, 40, "minmaxstr swallows max on COW");
 
 # Test with a single list value
 my $input = 'foo';
-($min, $max) = minmax $input;
+($min, $max) = minmaxstr $input;
 is($min, 'foo');
 is($max, 'foo');
 
