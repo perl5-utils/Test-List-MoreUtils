@@ -2,6 +2,8 @@
 use Test::More;
 use Test::LMU;
 
+plan skip_all => "It's insane to use a pure-perl qsort" unless $INC{'List/MoreUtils/XS.pm'};
+
 my @ltn_asc = qw(2 3 5 7 11 13 17 19 23 29 31 37);
 my @ltn_des = reverse @ltn_asc;
 my @l;
