@@ -21,7 +21,7 @@ leak_free_ok(
     },
     'reduce_u X' => sub {
         my @w = map { int(rand(5)) + 1; } 1..100;
-        my $c1  = reduce_u { defined $a or $a = 0; $a + $w[$_] * $b } 1..100;
+        my $c1  = reduce_u { ($a || 0) + $w[$_] * $b } 1..100;
     }
 );
 leak_free_ok(
