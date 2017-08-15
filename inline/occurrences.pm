@@ -14,7 +14,7 @@ SCOPE:
     my $n_et    = scalar(split /\bet\b/, $lorem) - 1;
 
     my @l = @lorem;
-    my @o = occurances @l;
+    my @o = occurrences @l;
 
     is(undef, $o[0], "Each word is counted");
     is(undef, $o[1], "Text to long, each word is there at least twice");
@@ -22,7 +22,7 @@ SCOPE:
     is_deeply(['.'],  $o[$n_dot],   "$n_dot dots");
     is_deeply(['et'], $o[$n_et],    "$n_et words 'et'");
 
-    @o = occurances grep { /\w+/ } @lorem;
+    @o = occurrences grep { /\w+/ } @lorem;
     my $wc = reduce_0 { defined $b ? $a + $_ * scalar @$b : $a } @o;
     is( $wc, 124, "Words are as many as requested at www.loremipsum.de" );
 }
@@ -31,10 +31,10 @@ SCOPE:
 {
     my @probes = ((1) x 3, (2) x 4, (3) x 2, (4) x 7, (5) x 2, (6) x 4);
     my $fp     = freeze(\@probes);
-    my @o      = map { ref $_ ? [sort @$_] : $_ } occurances @probes;
+    my @o      = map { ref $_ ? [sort @$_] : $_ } occurrences @probes;
     is($fp, freeze(\@probes), "probes untouched");
     my @expectation = (undef, undef, [3, 5], [1], [2, 6], undef, undef, [4]);
-    is_deeply(\@expectation, \@o, "occurances of integer probes");
+    is_deeply(\@expectation, \@o, "occurrences of integer probes");
 }
 
 SCOPE:
@@ -45,35 +45,35 @@ SCOPE:
         ref $_
           ? [sort { (defined $a <=> defined $b) or $a <=> $b } @$_]
           : $_
-    } occurances @probes;
+    } occurrences @probes;
     is($fp, freeze(\@probes), "probes untouched");
     my @expectation = (undef, undef, [3, 5], [1], [2, 6], [undef], undef, [4]);
-    is_deeply(\@expectation, \@o, "occurances of integer probes");
+    is_deeply(\@expectation, \@o, "occurrences of integer probes");
 }
 
 leak_free_ok(
-    occurances => sub {
+    occurrences => sub {
         my @probes = ((1) x 3, (2) x 4, (3) x 2, (4) x 7, (5) x 2, (6) x 4);
-        my @o = occurances @probes;
+        my @o = occurrences @probes;
     },
-    'scalar occurances' => sub {
+    'scalar occurrences' => sub {
         my @probes = ((1) x 3, (2) x 4, (3) x 2, (4) x 7, (5) x 2, (6) x 4);
-        my $o = occurances @probes;
+        my $o = occurrences @probes;
     }
 );
 
 leak_free_ok(
-    'occurances with exception in overloading stringify',
+    'occurrences with exception in overloading stringify',
     sub {
         eval {
             my $obj    = DieOnStringify->new;
             my @probes = ((1) x 3, $obj, (2) x 4, $obj, (3) x 2, $obj, (4) x 7, $obj, (5) x 2, $obj, (6) x 4);
-            my @o      = occurances @probes;
+            my @o      = occurrences @probes;
         };
         eval {
             my $obj    = DieOnStringify->new;
             my @probes = ((1) x 3, $obj, (2) x 4, $obj, (3) x 2, $obj, (4) x 7, $obj, (5) x 2, $obj, (6) x 4);
-            my $o      = occurances @probes;
+            my $o      = occurrences @probes;
         };
     }
 );
