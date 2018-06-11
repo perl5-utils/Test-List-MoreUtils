@@ -129,9 +129,40 @@ leak_free_ok(
         eval {
             binsert { grow_stack(); $_ <=> $elem or die "Goal!"; $_ <=> $elem } $elem, @list;
         };
+    },
+    "undef" => sub {
+        my @list = map { $_ * 2 } 1 .. 100;
+        my $elem = int(rand(100)) + 1;
+        binsert { my $rc = $_ <=> $elem; undef $_; $rc } $elem, @list;
+    },
+    'undef *_' => sub {
+        my @list = map { $_ * 2 } 1 .. 100;
+        my $elem = int(rand(100)) + 1;
+        eval {
+            binsert { my $rc = $_ <=> $elem; undef *_; $rc } $elem, @list;
+        };
+        *_ = \'';
+    },
+    'finally undef *_' => sub {
+        my @list = map { $_ * 2 } 1 .. 100;
+        my $elem = int(rand(100)) + 1;
+        eval {
+            binsert { my $rc = $_ <=> $elem; $rc == 0 and undef *_; $rc } $elem, @list;
+        };
+        *_ = \'';
     }
 );
 
 is_dying('binsert without sub' => sub { &binsert(42, @even); });
+is_dying(
+    'binsert without list' => sub {
+        &binsert(sub { }, 47, 11);
+    }
+);
+is_dying(
+    'binsert undef *_' => sub {
+        binsert { my $rc = $_ <=> 47; undef *_; $rc } 47, @even;
+    }
+);
 
 done_testing;

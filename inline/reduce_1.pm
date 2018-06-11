@@ -28,4 +28,11 @@ my $half_pi = reduce_1 { $a * ((4 * $b * $b) / ((2 * $b - 1) * (2 * $b + 1))) } 
 
 near($half_pi, pi / 2, "Wallis product", 1e-2);
 
+SKIP:
+{
+    $INC{'List/MoreUtils/XS.pm'} or skip 'In Pure-Perl $a/$b are readonly ...', 1;
+    my @l = (1 .. 10);
+    my $r = reduce_1 { $b = \1; $a = \2; } @l;
+}
+
 done_testing;

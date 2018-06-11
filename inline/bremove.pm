@@ -10,7 +10,7 @@ my (@expected, @in);
 @in = mesh @odd, @even;
 foreach my $v (@odd)
 {
-    is($v, (bremove { $_ <=> $v } @in), "$v in order removed");
+    is($v, (bremove { $_++ <=> $v } @in), "$v in order removed");
 }
 is_deeply(\@in, \@expected, "bremove all odd elements succeeded");
 
@@ -32,7 +32,7 @@ is_deeply(\@in, \@expected, "bremove all even elements succeeded");
 @in = mesh @odd, @even;
 foreach my $v (reverse @even)
 {
-    is($v, (bremove { $_ <=> $v } @in), "$v reverse ordered removed");
+    is($v, (bremove { $_++ <=> $v } @in), "$v reverse ordered removed");
 }
 is_deeply(\@in, \@expected, "bremove all even elements reversely succeeded");
 
@@ -102,6 +102,27 @@ leak_free_ok(
             bremove { grow_stack(); $_ <=> $v or die "Goal!"; $_ <=> $v } @list;
         };
     },
+    "undef" => sub {
+        my @list = mesh @odd, @even;
+        my $v = $list[0];
+        bremove { my $rc = $_ <=> $v; undef $_; $rc } @list;
+    },
+    'undef *_' => sub {
+        my @list = mesh @odd, @even;
+        my $v = $list[-1];
+        eval {
+            bremove { my $rc = $_ <=> $v; undef *_; $rc } @list;
+        };
+        *_ = \'';
+    },
+    'finally undef *_' => sub {
+        my @list = mesh @odd, @even;
+        my $v = int(rand(scalar @list)) + 1;
+        eval {
+            bremove { my $rc = $_ <=> $v; $rc == 0 and undef *_; $rc } @list;
+        };
+        *_ = \'';
+    }
 );
 is_dying('bremove without sub' => sub { &bremove(42, @even); });
 

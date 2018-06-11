@@ -3,10 +3,10 @@ use Test::More;
 use Test::LMU;
 
 my @list = (1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 6, 7, 7, 7, 8, 8, 9, 9, 9, 9, 9, 11, 13, 13, 13, 17);
-is_deeply([0,  0],  [equal_range { $_ <=> 0 } @list], "equal range 0");
-is_deeply([0,  2],  [equal_range { $_ <=> 1 } @list], "equal range 1");
-is_deeply([2,  4],  [equal_range { $_ <=> 2 } @list], "equal range 2");
-is_deeply([10, 14], [equal_range { $_ <=> 4 } @list], "equal range 4");
+is_deeply([0,  0],  [equal_range { $_-- <=> 0 } @list], "equal range 0");
+is_deeply([0,  2],  [equal_range { $_++ <=> 1 } @list], "equal range 1");
+is_deeply([2,  4],  [equal_range { $_-- <=> 2 } @list], "equal range 2");
+is_deeply([10, 14], [equal_range { $_++ <=> 4 } @list], "equal range 4");
 is_deeply([(scalar @list) x 2], [equal_range { $_ <=> 19 } @list], "equal range 19");
 
 my @in = @list = 1 .. 100;
@@ -30,8 +30,30 @@ leak_free_ok(
         eval {
             equal_range { grow_stack(); $_ - $elem or die "Goal!"; $_ - $elem } @list;
         };
+    },
+    "undef" => sub {
+        equal_range { my $rc = $_ <=> 0; undef $_; $rc } @list;
+    },
+    'undef *_' => sub {
+        eval {
+            equal_range { my $rc = $_ <=> 1; undef *_; $rc } @list;
+        };
+        note $@;
+        *_ = \'';
+    },
+    'finally undef *_' => sub {
+        eval {
+            equal_range { my $rc = $_ <=> 4; undef *_ if $rc == 0; $rc } @list;
+        };
+        note $@;
+        *_ = \'';
     }
 );
 is_dying('equal_range without sub' => sub { &equal_range(42, (1 .. 100)); });
+is_dying(
+    'upper_bound undef *_' => sub {
+        equal_range { my $rc = $_ <=> 9; undef *_; $rc } @list;
+    }
+);
 
 done_testing;

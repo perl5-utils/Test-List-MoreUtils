@@ -13,6 +13,13 @@ SCOPE:
     is($wa, 3.15, "weighted average of exam");
 }
 
+SKIP:
+{
+    $INC{'List/MoreUtils/XS.pm'} or skip 'In Pure-Perl $a/$b are readonly ...', 1;
+    my @l = (1 .. 10);
+    my $r = reduce_0 { $b = \1; $a = \2; } @l;
+}
+
 leak_free_ok(
     'reduce_0' => sub {
         my @exam_results = (2, 4, 6, 5, 3, 0);

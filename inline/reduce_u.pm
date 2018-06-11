@@ -34,4 +34,11 @@ leak_free_ok(
 );
 is_dying('reduce_u without sub' => sub { &reduce_u(42, 4711); });
 
+SKIP:
+{
+    $INC{'List/MoreUtils/XS.pm'} or skip 'In Pure-Perl $a/$b are readonly ...', 1;
+    my @l = (1 .. 10);
+    my $r = reduce_u { $b = \1; $a = \2; } @l;
+}
+
 done_testing
