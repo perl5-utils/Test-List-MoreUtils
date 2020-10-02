@@ -5,17 +5,18 @@ use Test::LMU;
 my @list = my @in = 1 .. 1000;
 for my $elem (@in)
 {
-    ok((scalar bsearch { $_ - $elem } @list), "bsearch $elem in scalar context");
+    ok(scalar bsearch { $_ - $elem } @list);
 }
 for my $elem (@in)
 {
-    is_deeply([$elem], [bsearch { $_ - $elem } @list], "bsearch $elem in list context");
+    my ($e) = bsearch { $_ - $elem } @list;
+    ok($e == $elem);
 }
 my @out = (-10 .. 0, 1001 .. 1011);
 for my $elem (@out)
 {
     my $r = bsearch { $_ - $elem } @list;
-    ok(!defined $r, "bsearch $elem in scalar context");
+    ok(!defined $r);
 }
 
 leak_free_ok(
@@ -38,29 +39,6 @@ leak_free_ok(
         eval {
             scalar bsearch { grow_stack(); $_ - $elem or die "Goal!"; $_ - $elem } @list;
         };
-    },
-    "undef" => sub {
-        my @list = map { $_ * 2 } 1 .. 100;
-        my $elem = int(rand(100)) + 1;
-        bsearch { my $rc = $_ <=> $elem; undef $_; $rc } @list;
-    },
-    'undef *_' => sub {
-        my @list = map { $_ * 2 } 1 .. 100;
-        my $elem = int(rand(100)) + 1;
-        eval {
-            bsearch { my $rc = $_ <=> $elem; undef *_; $rc } @list;
-        };
-        note $@;
-        *_ = \'';
-    },
-    'finally undef *_' => sub {
-        my @list = map { $_ * 2 } 1 .. 100;
-        my $elem = int(rand(100)) + 1;
-        eval {
-            bsearch { my $rc = $_ <=> $elem; undef *_ if $rc == 0; $rc } @list;
-        };
-        note $@;
-        *_ = \'';
     }
 );
 is_dying('bsearch without sub' => sub { &bsearch(42, (1 .. 100)); });

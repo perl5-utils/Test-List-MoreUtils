@@ -2,13 +2,10 @@
 use Test::More;
 use Test::LMU;
 
-# side-effects of modifying $_ is tested in other LOWER_BOUNDS based
-# XSUBs like bsearch, binsert and bremove
-
 my @list = my @in = 1 .. 1000;
 for my $i (0 .. $#in)
 {
-    is($i, bsearchidx { $_++ - $in[$i] } @list);
+    is($i, bsearchidx { $_ - $in[$i] } @list);
 }
 my @out = (-10 .. 0, 1001 .. 1011);
 for my $elem (@out)

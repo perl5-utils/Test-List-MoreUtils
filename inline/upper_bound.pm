@@ -3,10 +3,10 @@ use Test::More;
 use Test::LMU;
 
 my @list = (1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 6, 7, 7, 7, 8, 8, 9, 9, 9, 9, 9, 11, 13, 13, 13, 17);
-is(0,  (upper_bound { $_++ <=> 0 } @list), "upper bound 0");
-is(2,  (upper_bound { $_-- <=> 1 } @list), "upper bound 1");
-is(4,  (upper_bound { $_++ <=> 2 } @list), "upper bound 2");
-is(14, (upper_bound { $_-- <=> 4 } @list), "upper bound 4");
+is(0,  (upper_bound { $_ <=> 0 } @list), "upper bound 0");
+is(2,  (upper_bound { $_ <=> 1 } @list), "upper bound 1");
+is(4,  (upper_bound { $_ <=> 2 } @list), "upper bound 2");
+is(14, (upper_bound { $_ <=> 4 } @list), "upper bound 4");
 is(scalar @list, (upper_bound { $_ <=> 19 } @list), "upper bound 19");
 
 my @in = @list = 1 .. 100;
@@ -47,30 +47,8 @@ leak_free_ok(
         eval {
             upper_bound { grow_stack(); $_ - $elem or die "Goal!"; $_ - $elem } @list;
         };
-    },
-    "undef" => sub {
-        upper_bound { my $rc = $_ <=> 0; undef $_; $rc } @list;
-    },
-    'undef *_' => sub {
-        eval {
-            upper_bound { my $rc = $_ <=> 1; undef *_; $rc } @list;
-        };
-        note $@;
-        *_ = \'';
-    },
-    'finally undef *_' => sub {
-        eval {
-            upper_bound { my $rc = $_ <=> 4; undef *_ if $rc == 0; $rc } @list;
-        };
-        note $@;
-        *_ = \'';
     }
 );
 is_dying('upper_bound without sub' => sub { &upper_bound(42, (1 .. 100)); });
-is_dying(
-    'upper_bound undef *_' => sub {
-        upper_bound { my $rc = $_ <=> 11; undef *_; $rc } @list;
-    }
-);
 
 done_testing;

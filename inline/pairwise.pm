@@ -48,12 +48,6 @@ SCOPE:
 @c = pairwise { ($a, $b) } @a, @b;
 is_deeply(\@c, [qw/a 1 b 2 c 3/], "pw map");
 
-SCOPE:
-{
-    my @l = (1 .. 10);
-    my @r = pairwise { ($b = \1, $a = \2) } @l, @l;
-}
-
 SKIP:
 {
     $ENV{PERL5OPT} and skip 'A defined PERL5OPT may inject extra deps crashing this test', 1;

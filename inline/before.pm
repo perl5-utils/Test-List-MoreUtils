@@ -2,10 +2,6 @@
 use Test::More;
 use Test::LMU;
 
-# side-effects of modifying $_ is tested in other FOR_EACH based
-# XSUBs like first*, last* and the JUNCTION functions
-# There's no sane need to prove the same code here again
-
 my @x = before { $_ % 5 == 0 } 1 .. 9;
 is_deeply(\@x, [1, 2, 3, 4], "before 5");
 

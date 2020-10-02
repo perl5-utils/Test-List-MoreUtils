@@ -2,10 +2,6 @@
 use Test::More;
 use Test::LMU;
 
-# side-effects of modifying $_ is tested in other FOR_EACH based
-# XSUBs like first*, last* and the JUNCTION functions
-# There's no sane need to prove the same code here again
-
 my @x = after_incl { $_ % 5 == 0 } 1 .. 9;
 is_deeply(\@x, [5, 6, 7, 8, 9], "after 5, included");
 

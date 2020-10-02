@@ -16,10 +16,4 @@ is_deeply(\@l, \@ltn_asc, "sorted ascending");
 qsort sub { $b <=> $a }, @l;
 is_deeply(\@l, \@ltn_des, "sorted descending");
 
-SCOPE:
-{
-    my @L = (1 .. 10);
-    my @R = qsort { $b = \1; $a = \2; } @L;
-}
-
 done_testing;
